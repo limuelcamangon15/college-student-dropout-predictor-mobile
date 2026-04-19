@@ -2,12 +2,29 @@ import Slider from "@react-native-community/slider";
 import React from "react";
 import { Text, View } from "react-native";
 
-function SliderQuestion({ label, value, setValue, min, max }) {
+function SliderQuestion({
+  label,
+  subLabel,
+  value,
+  setValue,
+  min,
+  max,
+  isForStudyTime = false,
+  isForIncome = false,
+  isForGwa = false,
+}) {
   return (
-    <>
+    <View
+      style={{
+        flexDirection: "row",
+        backgroundColor: "#262624",
+        padding: 16,
+        width: "100%",
+      }}
+    >
       <View
         style={{
-          width: "50%",
+          width: isForIncome ? "40%" : "50%",
         }}
       >
         <Text
@@ -30,31 +47,47 @@ function SliderQuestion({ label, value, setValue, min, max }) {
       <View
         style={{
           flexDirection: "row",
-          width: "50%",
+          width: isForIncome ? "60%" : "50%",
           alignItems: "center",
         }}
       >
         <Slider
-          style={{ width: "80%" }}
+          style={{
+            width: isForIncome ? "55%" : isForGwa ? "70%" : "80%",
+            flex: 1,
+          }}
           minimumValue={min}
           maximumValue={max}
           value={value}
-          onValueChange={setValue}
-          minimumTrackTintColor="#4f46e5"
+          onValueChange={(val) => {
+            const stepped = Math.round(val * 4) / 4;
+            setValue(stepped);
+          }}
+          minimumTrackTintColor="#474745"
           maximumTrackTintColor="#ccc"
-          thumbTintColor="#4f46e5"
+          thumbTintColor="#ffffff"
         />
         <Text
           style={{
-            color: "#fff",
+            color: "#ffffffc7",
             fontSize: 18,
             marginLeft: 12,
+            textAlign: "right",
           }}
         >
-          {value.toFixed(0)}
+          {isForIncome && "₱"}
+          {isForIncome
+            ? value.toLocaleString("en-PH", {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0,
+              })
+            : isForGwa
+            ? value.toFixed(2)
+            : value.toFixed(0)}
+          {isForStudyTime && "h"}
         </Text>
       </View>
-    </>
+    </View>
   );
 }
 

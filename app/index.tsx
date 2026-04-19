@@ -1,5 +1,6 @@
 import SliderQuestion from "@/components/SliderQuestion";
-import { useState } from "react";
+import SwitchQuestion from "@/components/SwitchQuestion";
+import { useEffect, useState } from "react";
 import { Pressable, SafeAreaView, Text, View } from "react-native";
 
 export default function Index() {
@@ -8,6 +9,12 @@ export default function Index() {
   const [failures, setFailures] = useState(0);
   const [absences, setAbsences] = useState(0);
   const [gwa, setGwa] = useState(1.0);
+  const [familyIncome, setFamilyIncome] = useState(1000);
+  const [isWorkingStudent, setIsWorkingStudent] = useState(false);
+
+  useEffect(() => {
+    console.log(isWorkingStudent);
+  }, [isWorkingStudent]);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#30302E" }}>
@@ -100,56 +107,146 @@ export default function Index() {
         <View>
           {activeTab === "assessment_tab" && (
             <>
-              <Text
-                style={{
-                  color: "#ffffff82",
-                  fontWeight: 500,
-                }}
-              >
-                ACADEMIC
-              </Text>
+              <>
+                <Text
+                  style={{
+                    color: "#ffffff82",
+                    fontWeight: 500,
+                  }}
+                >
+                  ACADEMIC
+                </Text>
+
+                <View
+                  style={{
+                    flexDirection: "column",
+                    backgroundColor: "#30302E",
+                    gap: 4,
+                    borderRadius: 16,
+                    overflow: "hidden",
+                    width: "100%",
+                    marginTop: 10,
+                  }}
+                >
+                  <SliderQuestion
+                    label="Study Time"
+                    subLabel={"Hours per week"}
+                    value={studyTime}
+                    setValue={setStudyTime}
+                    min={0}
+                    max={30}
+                    isForStudyTime={true}
+                  />
+
+                  <SliderQuestion
+                    label="Past Failures"
+                    subLabel={"Course failures"}
+                    value={failures}
+                    setValue={setFailures}
+                    min={0}
+                    max={9}
+                  />
+
+                  <SliderQuestion
+                    label="Absences"
+                    subLabel={"Days missed"}
+                    value={absences}
+                    setValue={setAbsences}
+                    min={0}
+                    max={16}
+                  />
+
+                  <SliderQuestion
+                    label="GWA"
+                    subLabel={"Current grade average"}
+                    value={gwa}
+                    setValue={setGwa}
+                    min={1}
+                    max={5}
+                    isForGwa={true}
+                  />
+                </View>
+              </>
+
+              <>
+                <Text
+                  style={{
+                    color: "#ffffff82",
+                    fontWeight: 500,
+                    marginTop: 12,
+                  }}
+                >
+                  PERSONAL
+                </Text>
+
+                <View
+                  style={{
+                    flexDirection: "column",
+                    backgroundColor: "#30302E",
+                    gap: 4,
+                    borderRadius: 16,
+                    overflow: "hidden",
+                    width: "100%",
+                    marginTop: 10,
+                  }}
+                >
+                  <SliderQuestion
+                    label="Family Income"
+                    subLabel={"Monthly (PHP)"}
+                    value={familyIncome}
+                    setValue={setFamilyIncome}
+                    min={1000}
+                    max={50000}
+                    isForIncome={true}
+                  />
+
+                  <SwitchQuestion
+                    label={"Working Student"}
+                    subLabel={"Currently employed"}
+                    value={isWorkingStudent}
+                    setValue={setIsWorkingStudent}
+                  />
+                </View>
+              </>
 
               <View
                 style={{
-                  flexDirection: "row",
-                  backgroundColor: "#262624",
-                  borderRadius: 16,
-                  width: "100%",
-                  marginTop: 10,
-                  padding: 16,
+                  backgroundColor: "#30302E",
+                  marginTop: 20,
                 }}
               >
-                <SliderQuestion
-                  label="Study Time"
-                  value={studyTime}
-                  setValue={setStudyTime}
-                  min={0}
-                  max={30}
-                />
+                <Pressable
+                  onPress={() => console.log("analyzing")}
+                  style={({ pressed }) => ({
+                    backgroundColor: pressed ? "#4D7C0F" : "#4e7d0b", // modern olive/green
+                    paddingVertical: 14,
+                    borderRadius: 14,
+                    alignItems: "center",
+                    justifyContent: "center",
+                    width: "100%",
 
-                <SliderQuestion
-                  label="Past Failures"
-                  value={failures}
-                  setValue={setFailures}
-                  min={0}
-                  max={9}
-                />
+                    // subtle depth
+                    shadowColor: "#000",
+                    shadowOpacity: pressed ? 0.15 : 0.25,
+                    shadowRadius: 6,
+                    shadowOffset: { width: 0, height: pressed ? 2 : 4 },
+                    elevation: pressed ? 2 : 5,
 
-                <SliderQuestion
-                  label="Absences"
-                  value={absences}
-                  setValue={setAbsences}
-                  min={0}
-                  max={16}
-                />
-
-                <SliderQuestion
-                  label="GWA"
-                  value={gwa}
-                  setValue={setGwa}
-                  min={1}
-                  max={5}
-                />
+                    // smooth press feel
+                    transform: [{ scale: pressed ? 0.98 : 1 }],
+                  })}
+                >
+                  <Text
+                    style={{
+                      color: "#fff",
+                      fontSize: 16,
+                      fontWeight: "500",
+                      letterSpacing: 0.5,
+                    }}
+                  >
+                    Analyze
+                  </Text>
+                </Pressable>
               </View>
             </>
           )}
