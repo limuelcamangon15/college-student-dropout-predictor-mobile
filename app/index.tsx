@@ -1,7 +1,8 @@
 import SliderQuestion from "@/components/SliderQuestion";
 import SwitchQuestion from "@/components/SwitchQuestion";
 import ResultsTab from "@/components/Tabs/ResultsTab";
-import { useEffect, useState } from "react";
+import { Ionicons } from "@expo/vector-icons";
+import { useState } from "react";
 import { Platform, Pressable, SafeAreaView, Text, View } from "react-native";
 
 export default function Index() {
@@ -13,9 +14,44 @@ export default function Index() {
   const [familyIncome, setFamilyIncome] = useState(1000);
   const [isWorkingStudent, setIsWorkingStudent] = useState(false);
 
-  useEffect(() => {
-    console.log(isWorkingStudent);
-  }, [isWorkingStudent]);
+  //for result tab
+  const [dropoutRisk, setDropoutRisk] = useState("");
+  const [keyFactors, setKeyFactors] = useState([]);
+  const [predictionPercentage, setPredictionPercentage] = useState(0);
+
+  async function callAPI() {
+    try {
+      const response = await fetch(
+        "https://student-dropout-predictor-api.onrender.com/api/predict/",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            study_time: studyTime,
+            failures: failures,
+            absences: absences,
+            gpa: gwa,
+            family_income: familyIncome,
+            working_student: isWorkingStudent ? 1 : 0,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (data) setActiveTab("result_tab");
+
+      setDropoutRisk(data.dropout_risk);
+      setKeyFactors(data.key_factors);
+      setPredictionPercentage(data.prediction_percentage);
+
+      console.log(data);
+    } catch (error) {
+      console.log("Something went wrong", error);
+    }
+  }
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#30302E" }}>
@@ -218,7 +254,9 @@ export default function Index() {
                 }}
               >
                 <Pressable
-                  onPress={() => console.log("analyzing")}
+                  onPress={() => {
+                    callAPI();
+                  }}
                   style={({ pressed }) => ({
                     backgroundColor: pressed ? "#4D7C0F" : "#4e7d0b", // modern olive/green
                     paddingVertical: 14,
@@ -246,14 +284,20 @@ export default function Index() {
                       letterSpacing: 0.5,
                     }}
                   >
-                    Analyze
+                    Predict <Ionicons name="analytics" size={20} />
                   </Text>
                 </Pressable>
               </View>
             </>
           )}
 
-          {activeTab === "result_tab" && <ResultsTab />}
+          {activeTab === "result_tab" && (
+            <ResultsTab
+              dropoutRisk={dropoutRisk}
+              keyFactors={keyFactors}
+              predictionPercentage={predictionPercentage}
+            />
+          )}
         </View>
       </View>
     </SafeAreaView>

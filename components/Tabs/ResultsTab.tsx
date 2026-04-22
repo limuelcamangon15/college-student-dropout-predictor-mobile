@@ -4,7 +4,7 @@ import * as Progress from "react-native-progress";
 import KeyFactor from "../KeyFactor";
 import Recommendation from "../Recommendation";
 
-function ResultsTab() {
+function ResultsTab({ dropoutRisk, keyFactors, predictionPercentage }) {
   const { width } = useWindowDimensions();
 
   return (
@@ -16,7 +16,10 @@ function ResultsTab() {
           alignItems: "flex-start",
           justifyContent: "center",
           borderRadius: 24,
-          backgroundColor: styles.riskPercentageContainerBackgroundColor.high,
+          backgroundColor:
+            dropoutRisk === "HIGH"
+              ? styles.riskPercentageContainerBackgroundColor.high
+              : styles.riskPercentageContainerBackgroundColor.low,
         }}
       >
         <View
@@ -26,7 +29,7 @@ function ResultsTab() {
             paddingBottom: 5,
             paddingLeft: 13,
             paddingRight: 13,
-            backgroundColor: "#760e0e",
+            backgroundColor: dropoutRisk === "HIGH" ? "#760e0e" : "#0b4805",
             flexDirection: "row",
             justifyContent: "center",
             alignItems: "center",
@@ -39,7 +42,7 @@ function ResultsTab() {
               borderRadius: 100,
               width: 8,
               height: 8,
-              backgroundColor: "#c60000",
+              backgroundColor: dropoutRisk === "HIGH" ? "#c60000" : "#338d2b",
             }}
           ></View>
 
@@ -49,18 +52,18 @@ function ResultsTab() {
               fontWeight: 600,
             }}
           >
-            HIGH RISK
+            {dropoutRisk}
           </Text>
         </View>
 
         <Text
           style={{
-            color: "#efb7b7d2",
+            color: dropoutRisk === "HIGH" ? "#efb7b7d2" : "#78c471cf",
             fontWeight: 600,
             fontSize: 50,
           }}
         >
-          78%
+          {predictionPercentage}%
         </Text>
 
         <Text
@@ -74,9 +77,9 @@ function ResultsTab() {
         </Text>
 
         <Progress.Bar
-          progress={0.7}
+          progress={predictionPercentage / 100}
           width={width - 83}
-          color="#af1515"
+          color={dropoutRisk === "HIGH" ? "#af1515" : "#23a117"}
           unfilledColor="#a6a6a6"
           borderWidth={0}
         />
@@ -101,11 +104,9 @@ function ResultsTab() {
             marginTop: 5,
           }}
         >
-          <KeyFactor label={"Low GWA"} />
-
-          <KeyFactor label={"High absences"} />
-
-          <KeyFactor label={"Multiple failures"} />
+          {keyFactors.map((kf, index) => (
+            <KeyFactor key={index} label={kf} />
+          ))}
         </View>
       </>
 
