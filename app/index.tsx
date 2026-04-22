@@ -1,16 +1,8 @@
-import { styles } from "@/app/styles";
 import SliderQuestion from "@/components/SliderQuestion";
 import SwitchQuestion from "@/components/SwitchQuestion";
+import ResultsTab from "@/components/Tabs/ResultsTab";
 import { useEffect, useState } from "react";
-import {
-  Platform,
-  Pressable,
-  SafeAreaView,
-  Text,
-  useWindowDimensions,
-  View,
-} from "react-native";
-import * as Progress from "react-native-progress";
+import { Platform, Pressable, SafeAreaView, Text, View } from "react-native";
 
 export default function Index() {
   const [activeTab, setActiveTab] = useState<string>("assessment_tab");
@@ -20,8 +12,6 @@ export default function Index() {
   const [gwa, setGwa] = useState(1.0);
   const [familyIncome, setFamilyIncome] = useState(1000);
   const [isWorkingStudent, setIsWorkingStudent] = useState(false);
-
-  const { width } = useWindowDimensions();
 
   useEffect(() => {
     console.log(isWorkingStudent);
@@ -263,83 +253,7 @@ export default function Index() {
             </>
           )}
 
-          {activeTab === "result_tab" && (
-            <>
-              <View
-                style={{
-                  width: "100%",
-                  padding: 25,
-                  alignItems: "flex-start",
-                  justifyContent: "center",
-                  borderRadius: 24,
-                  backgroundColor:
-                    styles.riskPercentageContainerBackgroundColor.high,
-                }}
-              >
-                <View
-                  style={{
-                    borderRadius: 100,
-                    paddingTop: 5,
-                    paddingBottom: 5,
-                    paddingLeft: 13,
-                    paddingRight: 13,
-                    backgroundColor: "#760e0e",
-                    flexDirection: "row",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    gap: 5,
-                    marginBottom: 5,
-                  }}
-                >
-                  <View
-                    style={{
-                      borderRadius: 100,
-                      width: 8,
-                      height: 8,
-                      backgroundColor: "#c60000",
-                    }}
-                  ></View>
-
-                  <Text
-                    style={{
-                      color: "#ec7c7cd2",
-                      fontWeight: 600,
-                    }}
-                  >
-                    HIGH RISK
-                  </Text>
-                </View>
-
-                <Text
-                  style={{
-                    color: "#efb7b7d2",
-                    fontWeight: 600,
-                    fontSize: 50,
-                  }}
-                >
-                  78%
-                </Text>
-
-                <Text
-                  style={{
-                    marginBottom: 10,
-                    color: "#ec7c7cd2",
-                    fontWeight: 400,
-                  }}
-                >
-                  Probability of dropout
-                </Text>
-
-                <Progress.Bar
-                  progress={0.7}
-                  width={width - 83}
-                  color="#af1515"
-                  unfilledColor="#a6a6a6"
-                  borderWidth={0}
-                />
-              </View>
-            </>
-          )}
+          {activeTab === "result_tab" && <ResultsTab />}
         </View>
       </View>
     </SafeAreaView>
