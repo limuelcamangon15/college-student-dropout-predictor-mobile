@@ -118,7 +118,7 @@ function ResultsTab() {
             marginLeft: 5,
           }}
         >
-          KEY FACTORS
+          RECOMMENDATIONS
         </Text>
 
         <View
